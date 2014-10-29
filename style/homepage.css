@@ -1,26 +1,13 @@
 @import url(http://fonts.googleapis.com/css?family=Raleway:300);
 @import url(http://fonts.googleapis.com/css?family=Merriweather);
 
-.name{ 
-    background-color: #004358; 
-    height: 50%;
-    line-height: 50vh;
-    color: #fff;
-    font-size: 4em;
-    font-weight: 300;
-}
-.writings{ background-color: #1F8A70; }
-.slides{ background-color: #BEDB39; }
-.projects{ background-color: #FFE11A; }
-.about{	background-color: #FD7400; }
-
-body,h1,div{ /*basic resets*/
-    margin: 0px;
-    padding: 0px;
-}
 html,body{
     font-family: 'Merriweather', sans-serif;
     height: 100%;
+}
+body,h1,div{ /*basic resets*/
+    margin: 0px;
+    padding: 0px;
 }
 ::selection{ /* just for fun*/
     color: white !important;
@@ -32,6 +19,22 @@ html,body{
     background-color: green !important;
     text-shadow: none;
 }
+
+.name{ 
+    background-color: #004358; 
+    height: 50%;
+    line-height: 50vh;
+    color: #fff;
+    font-size: 4em;
+    font-weight: 300;
+	max-width: 900px;
+	margin: 0 auto;
+}
+.writings{ background-color: #1F8A70; }
+.slides{ background-color: #BEDB39; }
+.projects{ background-color: #FFE11A; }
+.about{	background-color: #FD7400; }
+
 h1, a{
     font-family: 'Raleway', sans-serif;
     text-align: center;
@@ -39,11 +42,10 @@ h1, a{
 h1.title{
     padding: 20px;
 }
-section{
-    font-size: 1.5em;
+article{
 	max-width: 900px;
 	margin: .5em auto;
-	padding: 0px 10px;    
+	padding: 0px 10px;
 }
 a{
     display: block;
@@ -52,9 +54,14 @@ a{
     transition: color 200ms ease, height 300ms ease;
 	height: 12.5%;
     line-height: 12.5vh;
+	max-width: 900px;
+	margin: 0 auto;
 }
-a,a:visited{
+a, a:visited{
     color: black;
+}
+a:active{
+    color: #ccc;
 }
 a:hover{
     text-decoration: underline;
@@ -63,13 +70,12 @@ a:hover{
 a::after,a::before {
     content: " - "
 }
-a:active{
-    color: #ccc;
+p{
+	line-height: 1.5em;
 }
-
-@media screen and (min-width: 1200px) {
-    header, nav, section{
-        left: 15%;
-        right: 15%;
-    }
+time{
+	display: block;
+	color: #aaa;
+	font-size: .8em;
+	font-variant: small-caps;
 }
