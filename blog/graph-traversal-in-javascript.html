@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Graph Traversal in JavaScript - DannyC - Writings</title>
+		<meta name="description" content="Graph Traversal in JavaScript. Danny C's Blog">
+		<meta name="author" content="Danny C">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<link rel="stylesheet" href="../style/homepage.css">
+	</head>
+	<body>
+		<h1 class="title writings"><a href="index.html" title="List of all articles">Writings</a></h1>
+		<article>
+			<h2>Graph Traversal in JavaScript</h2>
+			<time>November 02, 2014</time>
+			<h4>What is a graph?</h4>
+			<h4>What does it mean to traverse?</h4>
+			<h4>One implementation</h4>
+			<pre><code>
+function traverseGraph(firstNodeId, allNodes){
+  var visitedIds = []; // keeps tracks of nodes that we have already traversed
+  var queue = allNodes[firstNodeId].associated; //initialize the queue with the first node we are going to traverse
+  while(queue && queue.length > 0){ //loop until we've traversed the whole double booked graph
+  	var nodeId = queue.shift(); //take the first item out of our queue
+  	if(visitedIds.indexOf(nodeId) < 0){ //have we NOT gone down this route already
+  	  visitedIds.push(nodeId); //we are now going down it- so add it to the list of visited
+  	  var nextIds = allNodes[nodeId].associated; //get the next node associated ids
+  	  //continue to traverse the graph by adding to queue more node ids if needed
+  	  for(var i = 0,l = nextIds.length; i < l; i++){ //loop through this nodes associated nodes
+  	    var nextId = nextIds[i];
+  	    if(visitedIds.indexOf(nextId) < 0 && queue.indexOf(nextId) < 0){ //have we NOT gone down this route already, and not already in the queue
+  		  queue.push(nextId); //add it to the queue
+  	    }
+  	  }
+    }
+  }
+  return visitedIds; //list of all the nodes that we've been to already
+}</code></pre>
+		</article>
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-56197709-1', 'auto');
+  ga('require', 'displayfeatures');
+  ga('send', 'pageview');
+</script>
+	</body>
+</html>
