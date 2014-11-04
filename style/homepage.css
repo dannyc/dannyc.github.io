@@ -5,7 +5,7 @@ html,body{
     font-family: 'Merriweather', sans-serif;
     height: 100%;
 }
-body,h1,div{ /*basic resets*/
+body, h1, h2, div{ /*basic resets*/
     margin: 0px;
     padding: 0px;
 }
@@ -35,30 +35,37 @@ body,h1,div{ /*basic resets*/
 .projects{ background-color: #FFE11A; }
 .about{	background-color: #FD7400; }
 
-h1, a{
+h1, a.nav{
     font-family: 'Raleway', sans-serif;
     text-align: center;
 }
 h1.title{
     padding: 20px;
+	text-shadow: 1px 1px 0px #000;
+	color: #fff;
+}
+span{
+	color: #1F8A70;
 }
 article{
 	max-width: 900px;
 	margin: .5em auto;
 	padding: 0px 10px;
 }
-a{
+a.nav{
     display: block;
     font-size: 2em;
-    text-decoration: none;
     transition: color 200ms ease, height 300ms ease;
 	height: 12.5%;
     line-height: 12.5vh;
 	max-width: 900px;
 	margin: 0 auto;
 }
+a{
+	text-decoration: none;
+}
 a, a:visited{
-    color: black;
+    color: inherit;
 }
 a:active{
     color: #ccc;
@@ -67,7 +74,7 @@ a:hover{
     text-decoration: underline;
 	text-shadow: 0px 0px 6px rgba(255,255,255,0.7);
 }
-a::after,a::before {
+a.nav::after,a.nav::before {
     content: " - "
 }
 p{
