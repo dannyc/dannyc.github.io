@@ -86,3 +86,9 @@ time{
 	font-size: .8em;
 	font-variant: small-caps;
 }
+img{
+    max-width: 100%;
+}
+code{
+    font-size: 1.4em;
+}

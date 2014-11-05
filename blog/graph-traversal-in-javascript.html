@@ -13,27 +13,52 @@
 			<h2>Graph Traversal in JavaScript</h2>
 			<time>November 02, 2014</time>
 			<h4>What is a graph?</h4>
+            <p>To use a simplistic definition that suites the purpose of this post- A graph is common data structure where nodes can be connected to one or many other nodes. This could probably best be understood with an example. Take for example LinkedIn. Bob works at Acme together with Tom. Bob connects with Tom on LinkedIn. They now have an equal relationship- Tom is connected to Bob just like Bob is connected to Tom. Additionally Bob connects to his old college roommate Dan who works at ShopRite. Dan, however has never met Tom and they have no connection.
+            Tom starts getting into it, and connects with his coworker at ShopRite, Max. Max already has a connection to his old girlfriend Eve. Eve, happens to be Dan's cousin and is connected to him. Eve is also connected to her former roomate Sue.</p>
+            <img src="assets/graph.svg">
+            
+            <p>If that sounds complex it can more easily visualized like in the graph above.</p>
 			<h4>What does it mean to traverse?</h4>
 			<h4>One implementation</h4>
 			<pre><code>
 function traverseGraph(firstNodeId, allNodes){
-  var visitedIds = []; // keeps tracks of nodes that we have already traversed
-  var queue = allNodes[firstNodeId].associated; //initialize the queue with the first node we are going to traverse
-  while(queue && queue.length > 0){ //loop until we've traversed the whole double booked graph
-  	var nodeId = queue.shift(); //take the first item out of our queue
-  	if(visitedIds.indexOf(nodeId) < 0){ //have we NOT gone down this route already
-  	  visitedIds.push(nodeId); //we are now going down it- so add it to the list of visited
-  	  var nextIds = allNodes[nodeId].associated; //get the next node associated ids
-  	  //continue to traverse the graph by adding to queue more node ids if needed
-  	  for(var i = 0,l = nextIds.length; i < l; i++){ //loop through this nodes associated nodes
-  	    var nextId = nextIds[i];
-  	    if(visitedIds.indexOf(nextId) < 0 && queue.indexOf(nextId) < 0){ //have we NOT gone down this route already, and not already in the queue
-  		  queue.push(nextId); //add it to the queue
-  	    }
-  	  }
+//keeps tracks of nodes that 
+//we have already traversed
+ var visitedIds = [];
+//initialize the queue with the 
+//first node we are going to traverse
+ var queue = allNodes[firstNodeId].associated;
+ while(queue && queue.length > 0){ 
+//loop until we've traversed the 
+//whole double booked graph
+//take the first item out of our queue
+  var nodeId = queue.shift();
+//have we NOT gone down this route already
+  if(visitedIds.indexOf(nodeId) < 0){
+//we are now going down it- 
+//so add it to the list of visited
+   visitedIds.push(nodeId);
+//get the next node associated ids
+   var nextIds = allNodes[nodeId].associated;
+   var len = nextIds.length;
+//continue to traverse the graph by adding 
+//to queue more node ids if needed
+//loop through this nodes associated nodes
+   for(var i = 0; i < len; i++){
+    var nextId = nextIds[i];
+//have we NOT gone down this route already
+//and not already in the queue
+    if(visitedIds.indexOf(nextId) < 0 
+       && queue.indexOf(nextId) < 0){
+//add it to the queue
+     queue.push(nextId);
     }
+   }
   }
-  return visitedIds; //list of all the nodes that we've been to already
+ }
+//list of all the nodes 
+//that we've been to already
+ return visitedIds;
 }</code></pre>
 		</article>
 <script>
