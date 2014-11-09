@@ -92,3 +92,7 @@ img{
 code{
     font-size: 1.4em;
 }
+pre{
+    background-color: #f5f2f0;
+    overflow-x: auto;/*TODO: test this on mobile...*/
+}
