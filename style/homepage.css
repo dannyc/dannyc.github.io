@@ -1,13 +1,21 @@
 @import url(http://fonts.googleapis.com/css?family=Raleway:300);
 @import url(http://fonts.googleapis.com/css?family=Merriweather);
 
-html,body{
-    font-family: 'Merriweather', sans-serif;
+html{
     height: 100%;
+}
+body{
+    font-family: 'Merriweather', sans-serif;
+    min-height: 100%;
+    color: #222;
 }
 body, h1, h2, div{ /*basic resets*/
     margin: 0px;
     padding: 0px;
+}
+span, p{
+    font-size: 1.2em;
+    line-height: 1.5em;    
 }
 ::selection{ /* just for fun*/
     color: white !important;
@@ -42,7 +50,10 @@ h1, a.nav{
 h1.title{
     padding: 20px;
 	text-shadow: 1px 1px 0px #000;
-	color: #fff;
+    color: #fff;
+}
+h1.title a{
+    color: #fff;
 }
 span{
 	color: #1F8A70;
@@ -52,33 +63,53 @@ article{
 	margin: .5em auto;
 	padding: 0px 10px;
 }
-a.nav{
-    display: block;
-    font-size: 2em;
-    transition: color 200ms ease, height 300ms ease;
-	height: 12.5%;
-    line-height: 12.5vh;
-	max-width: 900px;
-	margin: 0 auto;
-}
 a{
-	text-decoration: none;
+	color: #004358;
+    text-decoration: none;
+    transition: color 500ms ease, height 300ms, width 300ms;
 }
 a, a:visited{
-    color: inherit;
+    color: #004358;
 }
 a:active{
     color: #ccc;
 }
 a:hover{
-    text-decoration: underline;
+    /*text-decoration: underline;*/
 	text-shadow: 0px 0px 6px rgba(255,255,255,0.7);
+    /*color: darkblue;*/
 }
-a.nav::after,a.nav::before {
-    content: " - "
+a.nav{
+    display: block;
+    font-size: 2em;
+	height: 12.5%;
+    line-height: 12.5vh;
+	max-width: 900px;
+	margin: 0 auto;
+    color: #000;
 }
-p{
-	line-height: 1.5em;
+a.nav:hover{
+    text-decoration: none;
+}
+
+h1 a::before {
+    content: "<";
+	transform: translateX(20px);
+}
+h1 a::after{
+	content: "";
+}
+a::after{
+	content: " >";
+	transform: translateX(-20px);
+}
+a::before,a::after{
+	opacity: 0;
+	transition: opacity 500ms, transform 300ms;
+}
+a:hover::before, a:hover::after{
+	opacity: 1;
+	transform: translateX(0px);
 }
 time{
 	display: block;
@@ -95,4 +126,7 @@ code{
 pre{
     background-color: #f5f2f0;
     overflow-x: auto;/*TODO: test this on mobile...*/
+}
+.icon{
+    float: left;
 }
