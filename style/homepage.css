@@ -13,7 +13,7 @@ body, h1, h2, div{ /*basic resets*/
     margin: 0px;
     padding: 0px;
 }
-span, p{
+span, p, li{
     font-size: 1.2em;
     line-height: 1.5em;    
 }

@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Cross Tab and Window Communications, 4 options - DannyC - Writings</title>
+		<meta name="description" content="Cross Tab and Window Communications. Danny C's Blog">
+		<meta name="author" content="Danny C">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta charset="utf-8">
+		<link rel="stylesheet" href="../style/homepage.css">
+		<!--<link rel="stylesheet" href="../style/prism.css">-->
+	</head>
+	<body>
+		<h1 class="title writings"><a href="index.html" title="List of all articles">Writings</a></h1>
+		<article>
+			<h2>Cross Tab and Window Communications, 4 options</h2>
+			<time>January 20, 2015</time>
+			<h3>The Need</h3>
+			<p>Frequently when dealing with large web apps there comes a need to open another window either using window.open() or by embedding an iFrame and changing the iFrame source. At that point any changes made in one window need to be reflected in the original or parent window. But how do you indicate to the original window when and what something changes?</p>
+			<h3>The Options</h3>
+			<p>There are four ways to achieve this that I know about</p>
+			<ol>
+				<li>Directly</li>
+				<li>Via the Server</li>
+				<li>localStorage (HTML5)</li>
+				<li>postMessage (HTML5)</li>
+			</ol>
+			<h3>Directly</h3>
+			<p>If one window opens another window it can retain a reference to the opened window. Similarly, a window opened by another window can reference it's opener. (Assuming they are part of the same domain!). With the window reference in hand- JavaScript methods can be called directly on a different window/tab.</p>
+			<p>From the parent:</p>
+			<pre><code>var child = window.open("/new-window/test");
+child.doSomething();</code></pre>
+			<p>From the child:</p>
+			<pre><code>window.opener.doSomething();</code></pre>
+			<p> However- IE ruins the day. Although this works great for simple scenarios, in practice it frequently becomes impossible to pass object parameters from one window to another in IE. Why exactly that is I can not say. However too frequently when passing complex object as parameters, especially if they are being referenced in both windows, IE throws an obscure error message. My hunch it's because of how IE was designed the object pointers in the native browser code are unable to be transferred. Whatever the reason- too often direct communication was met with an unwilling IE.</p>
+			<h3>Via the Server</h3>
+			<p>Instead of directly communicating- each window can send a message to the server via AJAX. All other windows can then poll the server to listen for any messages that were passed. A AJAX push mechanism or websockets can be used instead of polling. Every time the polling windows identify a message, they can perform a local function in their own window.</p>
+			<p><em>PROS</em></p>
+			<ul>
+				<li>Reliable.</li>
+				<li>Server can keep logs of what's happening</li>
+				<li>Server can tweak the data that's being sent over the wire</li>
+			</ul>
+			<p><em>CONS</em></p>
+			<ul>
+				<li>Server stress of regular AJAX calls, and pings from all the listening windows.</li>
+				<li>Developer overhead of creating a messaging system</li>
+				<li>Not instant- need to wait for a roundtrip back and force from the server until the listening window takes action</li>
+			</ul>
+			<h3>localStorage</h3>
+			<p><a href="https://developer.mozilla.org/en-US/docs/Web/API/Web_Storage_API">docs</a></p>
+			<p>This feature is considered part of the new HTML5 API's. However this has full support going back to IE8 making this one of the older of the new API's to be out in the wild. localStorage's raison d'être is as it's name implies- storage. To this end it comes in two different flavors: localStorage and sessionStorage. localStorage allows you to store a string inside a browser based key/value map. This value is retained in storage even after the browser is closed, the computer is turned off, and the user has gone home for the night. sessionStorage has an identical API and does the same things, however, like it's name implies the value is saved only has long as the browser session is alive. If the browser is closed, the data is lost. The values that are saved can be retrieved by any website that is part of the same domain. So if you have a page at www.example.com/one who saves a value, www.example.com/two is also allowed to retrieve that value.</p>
+	<p>While storage is nice to have and all it's actually the unique behavior of storage events that we can use to our advantage. Every time data is added to the localStorage or sessionStorage an event is fired in <em>all</em> windows that are part of the same domain. So if we want to trigger an event we can simply save some data in localStorage and every other window that wants to respond can listen for the storage event.</p>
+	<pre><code>localStorage.setItem("myEvent", params);</code></pre>
+	<pre><code>window.addEventListener("storage", function(event){
+  switch(event.key){
+    case "myEvent": //do I care about event?
+	  var params = event.newValue;
+	  //do something with params
+	break;
+  }
+}, false);</code></pre>
+	<p>Note: if using jQuery the data will be in the event.originalEvent. For example event.originalEvent.newValue and event.originalEvent.key</p>
+	<p>As to be expected there are some caveats. For starters IE10 sessionStorage is very quirky. Sometimes after setting an item, calling sessionStorage.getItem(key) on other windows brings the old values! Personally I've given up on sessionStorage and now only use localStorage. That decision will need to be reevaluated as the support improves. Also on some browsers the event only fires when a new value is different than the old value. So if you just want to trigger an event without params, or use the same params over again you will need to add a timestamp to your value object so that it ensures it's unique. Another caveat is that localStorage only saves strings. So all your objects need to be serialized using JSON.stringify(). On the other end the listeners will then need to deserialize the string back into an object. And finally IE11 has several weird bugs related to localStorage events. They just don't fire consistently! I've learned this the hard way :(</p>
+			<p><em>PROS</em></p>
+				<ul>
+					<li>Can target any browser window without a direct reference</li>
+					<li>Can target multiple windows</li>
+					<li>Limited to same domain</li>
+					<li>Really easy to use</li>
+				</ul>
+				<p><em>CONS</em></p>
+				<ul>
+					<li>Can't target a specific window (see inverse as PRO)</li>
+					<li>Values need to be serialized</li>
+					<li>IE10</li>
+					<li>IE11</li>
+					<li>Did I mention IE?</li>
+				</ul>
+
+			<h3>postMessage</h3>
+			<p><a href="https://developer.mozilla.org/en-US/docs/Web/API/Window.postMessage">docs</a></p>
+			<p>A newish HTML5 feature that lets windows send [post] messages between one another. Similar to direct communication the browser windows need a reference to the opened or opener window. With that reference in hand a message can be passed to the other windows. This method is a bit of a cross between direct communications method and the localStorage technique. It's similar to direct communication in that you need a reference to the window that you would like to communicate with. However, on a implementation level it's closer localStorage since you essentially create a message event that needs to be listened for. Here though, the message does not need to be serialized.</p>
+			<p>Unlike all the other options on the list this works cross-domain! However cross domain messaging turns out to be a mixed bag. While it's great if you need it can become a security concern for that same reason if not handled correctly. To mitigate the risks of cross domain snooping by evil frames when sending a message you can limit the domains that are capable of listening to your message. </p>
+			<pre><code>var child = window.open("child.html");
+child.postMessage({param: value}, "/"); //"/" limits to same domain</code></pre>
+			<pre><code>window.addEventListener("message", function(event){
+  var params = event.data;
+  //do something with params
+}, false);
+</code></pre>
+				<p>Note: if using jQuery the data will be in the event.originalEvent.data</p>
+				<p><em>PROS</em><p>
+				<ul>
+					<li>Can pass objects without serialization</li>
+					<li>Can pass object without IE having a cow</li>
+				</ul>
+				<p><em>CONS</em></p>
+				<ul>
+					<li>Need a reference to the window that you are sending the message to</li>
+					<li>Potentially open to security concerns if not careful.</li>
+				</ul>
+			<h3>Conclusion</h3>
+			<p>All four methods have situations where they come in handy. Each have thier own set of caveats. Unfortantely IE bugs put a damper of both direct communication and localStorage events.</p>
+
+ <script>
+   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+   m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+   })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+   ga('create', 'UA-56197709-1', 'auto');
+   ga('require', 'displayfeatures');
+   ga('send', 'pageview');
+ </script>
+ 	</body>
+</html>
