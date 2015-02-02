@@ -16,11 +16,11 @@
             <h3><a href="async-graph-traversal-in-javascript.html">Part 2- Async graph traversal</a></h3>
 			<h3>What is a graph?</h3>
             <p>To use a simplistic definition that suites the purpose of this post- A graph is common data structure where nodes can be connected to one or many other nodes. This could probably best be understood with an example. Take for example LinkedIn. Bob works at Acme together with Tom. Bob connects with Tom on LinkedIn. They now have an equal relationship- Tom is connected to Bob just like Bob is connected to Tom. Additionally Bob connects to his old college roommate Dan who works at ShopRite. Dan, however has never met Tom and they have no connection.
-            Tom starts getting into it, and connects with his coworker at ShopRite, Max. Max already has a connection to his old girlfriend Eve. Eve, happens to be Dan's cousin and is connected to him. Eve is also connected to her former roomate Sue.</p>
+            Tom starts getting into it, and connects with his coworker at ShopRite, Max. Max already has a connection to his old girlfriend Eve. Eve, happens to be Dan's cousin and is connected to him. Eve is also connected to her former roommate Sue.</p>
             <p>If that sounds complex it can more easily visualized like in the graph below.</p>
             <img src="assets/graph.svg">            
 			<h3>What does it mean to traverse?</h3>
-            <p>Let's say that Bob now wants to find who <em>everyone</em> in his network is, no matter how distantly they are connected. In order to do that we would need to visit every person he is conneted and check who they are connected to, and check who <em>they</em> are connected and so on and so on... If Bob would want to find a person in his network that works at a Piggly Wigglies that would require a graph search, but here Bob just wants a list of names. That is called Graph Traversal since we need to traverse the whole graph.</p>
+            <p>Let's say that Bob now wants to find who <em>everyone</em> in his network is, no matter how distantly they are connected. In order to do that we would need to visit every person he is connected and check who they are connected to, and check who <em>they</em> are connected and so on and so on... If Bob would want to find a person in his network that works at a Piggly Wigglies that would require a graph search, but here Bob just wants a list of names. That is called Graph Traversal since we need to traverse the whole graph.</p>
 			<h3>One implementation</h3>
             <p>Assume that each member (node) is a simple object with three properties:</p>
 			<pre class="language-javascript"><code>var bob = {
